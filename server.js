@@ -2,6 +2,7 @@ var express = require('express');
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var config = require('./config');
+var bodyParser = require('body-parser');
 var app = express();
 var googleProfile = {};
 
@@ -35,17 +36,17 @@ app.get('/', function(req, res){
 });
 
 app.get('/logged', function(req, res){
-  res.render('logged', { user: googleProfile.displayName });
-  // const response = {
-  //   login: req.query.login
-  // };
-  // res.render("logged", response);
+  const response = {
+    user: googleProfile.displayName
+  };
+  res.render("logged", response);
 });
 //Passport routes
-app.get('/auth/google',
+app.get('/auth/google', 
 passport.authenticate('google', {
 scope : ['profile', 'email']
 }));
+
 app.get('/auth/google/callback',
   passport.authenticate('google', {
     successRedirect : '/logged',
